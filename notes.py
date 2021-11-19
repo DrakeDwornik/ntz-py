@@ -11,7 +11,6 @@ class Notes():
         self.notes_dict = {}
         self.load_json()
 
-
     def load_json(self):
         file_exists = os.path.exists(self.file)
         if file_exists:
@@ -45,7 +44,6 @@ class Notes():
             self.index_dictionary()
             f.close()
 
-
     def display_notes(self):
         for category in self.notes_dict:
             print(f"{self.categories_index.index(category):3d}. {category}")
@@ -69,6 +67,11 @@ class Notes():
             print("nothing deleted")
 
     def save_note(self, note: str, category: str = "general"):
+        try:
+            category = int(category)
+            category = self.categories_index[category]
+        except ValueError:
+            pass
         if category in self.notes_dict:
             self.notes_dict[category].append([note, False])
         else:
@@ -77,10 +80,9 @@ class Notes():
         self.save_dict_to_file()
 
     def index_dictionary(self):
-        self.categories_index = []
         self.categories_index = list(self.notes_dict.keys())
 
-    def remove_note(self,category_id, note_id):
+    def remove_note(self, category_id, note_id):
         del self.notes_dict[self.categories_index[category_id]][note_id]
         if len(self.notes_dict[self.categories_index[category_id]]) == 0:
             del self.notes_dict[self.categories_index[category_id]]
@@ -98,7 +100,7 @@ class Notes():
             self.save_note(new_note, self.categories_index[new_category])
         except ValueError:
             self.save_note(new_note, new_category)
-        self.remove_note(category_id,note_id)
+        self.remove_note(category_id, note_id)
         self.index_dictionary()
 
     def forget(self):
@@ -113,7 +115,7 @@ class Notes():
 A simple note program
 -h print this help text
 -r remember something (put in quotes if longer than 1 word
--c put the thing to be remmebered into a category (generic is used if omitted)
+-c put the thing to be remembered into a category (generic is used if omitted)
 -e enter edit mode
 -f enter forget mode
 --clear clear all notes
